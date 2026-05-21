@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QueueLens Studio | AI Queue Backlog & Consumer Repair Workspace</title>
+<style>
+:root{--bg:#070d16;--card:#101b2a;--text:#f7fbff;--muted:#a9b8cb;--line:rgba(255,255,255,.10);--cyan:#67e8f9;--blue:#8ab4ff;--green:#86efac;--amber:#fcd34d;--red:#fda4af;--violet:#c4b5fd}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:radial-gradient(circle at 8% -8%,rgba(103,232,249,.18),transparent 28rem),radial-gradient(circle at 92% 0,rgba(196,181,253,.15),transparent 24rem),radial-gradient(circle at 50% 100%,rgba(134,239,172,.09),transparent 30rem),linear-gradient(180deg,#070d16,#091524 50%,#060a12)}
+a{text-decoration:none;color:inherit}.wrap{width:min(1180px,calc(100% - 36px));margin:auto}
+.top{position:sticky;top:0;z-index:10;background:rgba(7,13,22,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.nav{height:74px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;gap:13px;align-items:center;font-weight:900}
+.logo{width:43px;height:43px;border-radius:16px;background:linear-gradient(135deg,var(--cyan),var(--blue),var(--violet));box-shadow:0 18px 48px rgba(103,232,249,.24);position:relative}
+.logo:before{content:"";position:absolute;left:11px;right:11px;top:12px;height:4px;background:#070d16;border-radius:999px;box-shadow:0 8px 0 #070d16,0 16px 0 #070d16}.logo:after{content:"";position:absolute;right:8px;bottom:8px;width:10px;height:10px;border-radius:999px;background:var(--green)}
+.brand small{display:block;color:#91a4ba;font-size:12px;font-weight:600}.links{display:flex;gap:22px;color:#c7d4e2;font-size:14px}
+.hero{padding:92px 0 58px}.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:42px;align-items:center}
+.tag{display:inline-flex;gap:9px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(103,232,249,.10);border:1px solid rgba(103,232,249,.22);font-size:13px;font-weight:900}.pulse{width:8px;height:8px;border-radius:999px;background:var(--green);box-shadow:0 0 0 8px rgba(134,239,172,.12)}
+h1{font-size:clamp(46px,7vw,84px);line-height:.9;letter-spacing:-.075em;margin:18px 0 20px}.grad{background:linear-gradient(90deg,#fff,#a5f3fc 34%,#dbeafe 62%,#ddd6fe 92%);-webkit-background-clip:text;color:transparent}
+.lead{font-size:18px;line-height:1.85;color:#c3d0de}.btns{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}.btn{padding:13px 18px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);font-weight:850}.primary{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#06101f;border:0}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}.metric,.card{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.045));border:1px solid var(--line);border-radius:26px;box-shadow:0 30px 90px rgba(0,0,0,.36)}
+.metric{padding:18px}.metric strong{display:block;font-size:30px}.metric span{font-size:13px;color:var(--muted)}
+.console{overflow:hidden}.console-head{display:flex;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}.dots{display:flex;gap:8px}.dot{width:10px;height:10px;border-radius:999px}.dot:nth-child(1){background:#ff7b7b}.dot:nth-child(2){background:#ffd166}.dot:nth-child(3){background:#86efac}
+.console-body,.panel,.feature,.road{padding:22px}.badge{display:inline-block;padding:7px 10px;border-radius:999px;background:rgba(252,211,77,.11);border:1px solid rgba(252,211,77,.2);font-size:12px;font-weight:900;color:#ffeaa7}
+.code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#07101a;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;color:#dce9fb;font-size:12.5px;line-height:1.72;white-space:pre-wrap;overflow:auto}
+.section{padding:46px 0}.section h2{font-size:44px;letter-spacing:-.055em;margin:0 0 10px}.section p{color:#b9c8d8;line-height:1.82}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:28px}.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.info,.step,.row,.note{padding:14px;border-radius:16px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07)}.info span{color:#9fafc2;font-size:13px}.timeline{display:grid;gap:12px}.step small{color:var(--cyan);font-weight:900;letter-spacing:.08em}
+.plus{color:var(--green)}.minus{color:var(--red)}.warn{color:var(--amber)}.table{display:grid;gap:10px;margin-top:18px}.row{display:grid;grid-template-columns:1.05fr .6fr .9fr;gap:10px;color:#d8e5f7;font-size:14px}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:rgba(103,232,249,.12);font-size:12px;font-weight:850}
+.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}.road small{color:var(--cyan);font-weight:900}.footer{padding:62px 0;text-align:center;color:#8fa0b7}
+@media(max-width:900px){.grid,.cards,.workspace,.roadmap,.metrics,.info-grid{grid-template-columns:1fr}.links{display:none}.row{grid-template-columns:1fr}h1{font-size:52px}.section h2{font-size:34px}}
+</style>
+</head>
+<body>
+<header class="top"><nav class="wrap nav"><div class="brand"><span class="logo"></span><span>QueueLens Studio<small>AI Queue Backlog & Consumer Repair Workspace</small></span></div><div class="links"><a href="#cap">Capabilities</a><a href="#work">Workspace</a><a href="#patch">Patch</a><a href="#road">Roadmap</a></div></nav></header>
+
+<main>
+<section class="hero wrap"><div class="grid"><div><div class="tag"><span class="pulse"></span>AI agents for Kafka, RabbitMQ, SQS and consumer reliability</div><h1>Diagnose queue backlogs before <span class="grad">they become incidents</span>.</h1><p class="lead">QueueLens Studio 是一个面向消息队列和事件驱动系统的 AI 堆积诊断与消费者修复工作台。它会读取 Kafka/RabbitMQ/SQS 指标、消费者源码、DLQ 消息样本、重试配置、trace、日志和部署 diff，自动定位消费变慢、重复投递、幂等缺失、重试风暴和死信堆积问题，并生成修复 patch、回归测试和运行手册。</p><div class="btns"><a class="btn primary" href="#work">Open Queue Workspace</a><a class="btn" href="#patch">View Consumer Patch</a></div><div class="metrics"><div class="metric"><strong>128k</strong><span>待处理消息峰值</span></div><div class="metric"><strong>11</strong><span>高风险 consumer 路径</span></div><div class="metric"><strong>8 agents</strong><span>聚类、修复、验证、复盘协作</span></div></div></div><div class="card console"><div class="console-head"><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><span style="color:#93a5ba;font-family:monospace">queue_run_9324</span></div><div class="console-body"><span class="badge">BACKLOG ROOT CAUSE FOUND</span><h3>Payment settlement consumer retries poison messages without idempotency guard</h3><div class="code">Loaded context:
+- Kafka topic: payment.settlement.created
+- 128,420 backlog messages
+- 2,904 DLQ samples
+- 16 consumer source files
+- 7 retry policy configs
+- 12 trace spans around settlement handler
+- 5 previous queue incidents
+
+Queue Agent result:
+settlement-worker commits offset only after external ledger call
+poison message retries block partition for 18 minutes
+dedupe key exists but is not checked before ledger write
+
+Suggested repair:
+idempotency guard + poison message quarantine + bounded retry + replay test</div></div></div></div></section>
+
+<section class="section wrap" id="cap"><h2>Designed for event-driven production systems.</h2><p>QueueLens 不只是看 lag 曲线，而是把 topic 指标、消费者代码、DLQ 样本、重试策略、trace 和部署 diff 串成证据链，判断堆积是吞吐不足、毒消息、下游慢调用还是幂等缺失导致。</p><div class="cards"><article class="card feature"><h3>Backlog Pattern Clustering</h3><p>按 topic、partition、consumer group、错误类型和消息 schema 聚类队列堆积。</p></article><article class="card feature"><h3>Consumer Path Analysis</h3><p>追踪消费处理、offset commit、外部调用、事务边界和异常分支。</p></article><article class="card feature"><h3>Retry & DLQ Repair</h3><p>生成 bounded retry、死信隔离、幂等保护、回放策略和限流配置。</p></article><article class="card feature"><h3>Replay Validation</h3><p>补充 poison message、重复投递、乱序、下游慢响应和重放恢复测试。</p></article></div></section>
+
+<section class="section wrap" id="work"><h2>Queue workspace demo.</h2><p>下面展示一次 payment settlement 主题消息堆积诊断。Agent 会先分析 lag、DLQ 和消费者源码，再生成幂等保护、毒消息隔离和回放测试。</p><div class="workspace"><section class="card panel"><h3>Backlog Snapshot</h3><div class="info-grid"><div class="info"><strong>Topic</strong><span>payment.settlement.created</span></div><div class="info"><strong>Consumer Group</strong><span>settlement-worker-prod</span></div><div class="info"><strong>Backlog Peak</strong><span>128,420 messages</span></div><div class="info"><strong>Primary Risk</strong><span>poison retry blocks partition</span></div></div><div class="code" style="margin-top:16px">Impact Map:
+payment.settlement.created
+├─ settlement-worker
+├─ ledger API call
+├─ idempotency table
+├─ offset commit
+└─ DLQ quarantine
+
+Failure mode:
+1. malformed merchant metadata triggers ledger 422
+2. worker retries same message 12 times
+3. partition offset is not advanced
+4. downstream settlement SLA misses 35 minutes
+5. manual replay risks duplicate ledger write
+
+Acceptance criteria:
+- poison messages move to quarantine topic
+- idempotency key checked before ledger write
+- bounded retry does not block partition
+- replay tool verifies no duplicate settlement</div><div class="note" style="margin-top:14px">目标是防御性队列可靠性修复：稳定消费、保护幂等、保留可审计回放路径。</div></section><section class="card panel"><h3>Agent Timeline</h3><div class="timeline"><div class="step"><small>LAG AGENT</small><h4>Cluster backlog patterns</h4><p>分析 topic lag、partition 分布、consumer group 状态和 DLQ 样本。</p></div><div class="step"><small>CONSUMER AGENT</small><h4>Trace handler and offset logic</h4><p>读取消费者源码、事务边界、外部调用和异常分支。</p></div><div class="step"><small>REPAIR AGENT</small><h4>Generate reliability patch</h4><p>生成幂等保护、bounded retry、poison quarantine 和回放保护。</p></div><div class="step"><small>REPLAY AGENT</small><h4>Validate with message fixtures</h4><p>补充重复投递、毒消息、乱序和下游慢响应测试。</p></div></div></section></div></section>
+
+<section class="section wrap" id="patch"><h2>Generated consumer repair patch.</h2><p>输出结果包含消费者代码修复、重试策略、DLQ 隔离、回放测试和运行验证矩阵。</p><div class="workspace"><section class="card panel"><h3>Consumer Patch</h3><div class="code"><span class="minus">- await ledger.writeSettlement(event)</span>
+<span class="minus">- await commitOffset(message)</span>
+
+<span class="plus">+ if (await idempotency.exists(event.settlementId)) {</span>
+<span class="plus">+   return commitOffset(message)</span>
+<span class="plus">+ }</span>
+
+<span class="plus">+ await retryBounded({ attempts: 3, backoff: 'exponential' }, async () => {</span>
+<span class="plus">+   await ledger.writeSettlement(event)</span>
+<span class="plus">+ })</span>
+
+<span class="plus">+ await idempotency.markProcessed(event.settlementId)</span>
+<span class="plus">+ await commitOffset(message)</span>
+
+<span class="plus">+ onPermanentFailure(message, async (error) => {</span>
+<span class="plus">+   await quarantine.publish('payment.settlement.quarantine', message, error)</span>
+<span class="plus">+   await commitOffset(message)</span>
+<span class="plus">+ })</span></div></section><section class="card panel"><h3>Validation Matrix</h3><div class="table"><div class="row"><span>Poison message test</span><span><span class="pill">PASS</span></span><span>partition no longer blocked</span></div><div class="row"><span>Idempotency replay</span><span><span class="pill">PASS</span></span><span>duplicate ledger write prevented</span></div><div class="row"><span>Retry policy</span><span><span class="pill">PASS</span></span><span>bounded to 3 attempts</span></div><div class="row"><span>DLQ quarantine</span><span><span class="pill">READY</span></span><span>quarantine topic includes audit reason</span></div></div></section></div></section>
+
+<section class="section wrap" id="road"><h2>Evaluation roadmap.</h2><p>后续计划使用多个开源消息队列项目和模拟事件流验证堆积诊断、消费者修复、幂等测试和回放运行手册生成能力。</p><div class="roadmap"><article class="card road"><small>Phase 01</small><h3>Backlog Diagnosis Benchmark</h3><p>覆盖 Kafka、RabbitMQ、SQS、Redis Streams 中的 lag、DLQ、重试风暴和毒消息。</p></article><article class="card road"><small>Phase 02</small><h3>Consumer Reliability Patch</h3><p>生成幂等键、事务边界、bounded retry、offset commit 和 quarantine 修复。</p></article><article class="card road"><small>Phase 03</small><h3>Replay Runbook Reports</h3><p>输出安全回放步骤、验证矩阵、SLA 恢复指标和后续预防任务。</p></article></div></section>
+</main><footer class="footer wrap">QueueLens Studio · AI Queue Backlog & Consumer Repair Workspace</footer>
+</body></html>
